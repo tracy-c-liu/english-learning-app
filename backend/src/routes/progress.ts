@@ -190,8 +190,10 @@ router.post('/quiz-result', async (req, res, next) => {
       .prepare('SELECT * FROM user_words WHERE user_id = ? AND word_id = ?')
       .get(userId, wordId) as any;
     
+    let newBucket: string | null = null;
+    
     if (userWord) {
-      let newBucket = userWord.bucket;
+      newBucket = userWord.bucket;
       
       if (isCorrect) {
         // Move up one bucket
@@ -246,7 +248,7 @@ router.post('/quiz-result', async (req, res, next) => {
     res.json({
       message: 'Quiz result saved',
       resultId,
-      newBucket: userWord ? newBucket : null,
+      newBucket,
     });
   } catch (error: any) {
     next(error);
